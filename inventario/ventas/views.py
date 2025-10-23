@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .models import Venta, ItemVenta
 from .forms import VentaForm, ItemVentaFormSet
@@ -6,6 +6,8 @@ from django.db import transaction
 from productos.models import Product
 from django.db.models import F
 from django.contrib import messages
+from django.urls import reverse
+from django.views.generic import DetailView, ListView
 
 class CrearVentaView(View):
     template_name = 'ventas/crear_venta.html'
@@ -34,7 +36,7 @@ class CrearVentaView(View):
             productos = Product.objects.select_for_update().filter(id__in=productos_ids).in_bulk()
 
             for form in formset:
-                if not form.cleaned_data or form_cleaned_data.get('Delete', False):
+                if not form.cleaned_data or form.cleaned_data.get('Delete', False):
                     continue
                 producto = form.cleaned_data['producto']
                 cantidad = form.cleaned_data['cantidad']
@@ -63,3 +65,12 @@ class CrearVentaView(View):
             venta.save()
         messages.success(request, f"Venta {venta.codigo} creada exitosamente.")
         return redirect('ventas:detalle_venta', pk=venta.pk)
+    
+class VentaDetailView(View):
+    template_name = 'ventas/detalle_venta.html'
+    model = Venta
+
+class VentaListView(ListView):
+    model = Venta
+    template_name = 'ventas/detalle_venta.html'
+    paginate_by = 20
