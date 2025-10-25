@@ -35,11 +35,6 @@ class ProductoForm(forms.ModelForm):
         help_texts = {
             "stock_minimo": "Se mostrará una alerta cuando el stock esté por debajo de ese valor"
         }
-    def clean_sku(self):
-        sku = self.cleaned_data.get['sku']
-        if sku and Producto.objects.filter(sku=sku).exists():
-            raise ValidationError("El SKU debe ser único. Ya existe un producto con este SKU.")
-        return sku
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
