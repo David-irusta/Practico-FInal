@@ -22,7 +22,7 @@ class ProductoForm(forms.ModelForm):
         # Vinculamos este formulario al modelo Producto
         model = Producto
         # Especificamos los campos que se incluirán en el formulario
-        fields = ["nombre", "descripcion", "precio", "stock", "stock_minimo", "imagen"]
+        fields = ["nombre", "descripcion", "precio", "stock", "stock_minimo", "imagen","sku"]
         # Usamos widgets para personalizar la apariencia de los campos HTML
         widgets = {
             "descripcion": forms.Textarea(attrs={"rows": 3}),  # Cambia el campo de texto a un área de texto más grande
@@ -35,6 +35,12 @@ class ProductoForm(forms.ModelForm):
         help_texts = {
             "stock_minimo": "Se mostrará una alerta cuando el stock esté por debajo de ese valor"
         }
+
+    def clean_sku(self):
+        sku = self.cleaned_data.get("sku")
+        if sku and Producto.objects.filter(sku=sku).exists():
+            raise ValidationError("El SKU debe ser único. Ya existe un producto con este SKU.")
+        return sku
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
