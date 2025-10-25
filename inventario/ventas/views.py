@@ -1,29 +1,30 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.views import View
 from .models import Venta, ItemVenta
 from .forms import VentaForm, ItemVentaFormSet
 from django.db import transaction
-from productos.models import Product
+from productos.models import Producto
 from django.db.models import F
 from django.contrib import messages
-from django.urls import reverse
-from django.views.generic import DetailView, ListView
+from django.views.generic import ListView
 
 class CrearVentaView(View):
+    context_object_name = 'venta'
+    model = Venta
     template_name = 'ventas/crear_venta.html'
 
-    def get(self, request, *args, **kwargs):
+    #def get(self, request, *args, **kwargs):
+    def get(self, request, *_args, **_kwargs):
         venta_form = VentaForm()
         formset = ItemVentaFormSet()
         return render(request, self.template_name, {
             'venta_form': venta_form,
             'formset': formset
         })
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *_args, **_kwargs):
         venta_form = VentaForm(request.POST)
         formset = ItemVentaFormSet(request.POST)
-        if not venta_form.is_valid() or not formset.is_valid():
-            return render(request, self.template_name, {
+        return render(request, self.template_name, {
                 'venta_form': venta_form,
                 'formset': formset
             })
@@ -33,7 +34,7 @@ class CrearVentaView(View):
             venta.save()
             total = 0
             productos_ids = [int(f.cleaned_data['producto'].id)for f in formset.cleaned_data if f and not f.get('DELETE', False)]
-            productos = Product.objects.select_for_update().filter(id__in=productos_ids).in_bulk()
+            productos = Producto.objects.select_for_update().filter(id__in=productos_ids).in_bulk()
 
             for form in formset:
                 if not form.cleaned_data or form.cleaned_data.get('Delete', False):
@@ -58,7 +59,7 @@ class CrearVentaView(View):
                     subtotal=subtotal
                 )
 
-                Product.objects.filter(id=prod_obj.id).update(stock=F('stock') - cantidad)
+                Producto.objects.filter(id=prod_obj.id).update(stock=F('stock') - cantidad)
                 total += subtotal
             
             venta.total = total
