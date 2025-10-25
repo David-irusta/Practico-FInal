@@ -1,0 +1,26 @@
+{% extends 'productos/base.html' %}
+{% load bootstrap4 %}
+{% load crispy_forms_tags %}
+
+{% block title %}Movimiento de Stock{% endblock %}
+{% block header %}Movimiento de Stock{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form|crispy }}
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> Guardar Movimiento
+                </button>
+                <a href="{% url 'productos:producto_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

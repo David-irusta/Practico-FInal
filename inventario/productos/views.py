@@ -17,7 +17,7 @@ class ProductoListView(ListView):
     """Muestra una lista de todos los productos."""
     model = Producto
     template_name = "producto/producto_list.html"
-    context_object_name = "producto"
+    context_object_name = "productos"
 
     def get_queryset(self):
         """Sobrescribe para permitir el filtrado por stock bajo."""
@@ -37,6 +37,13 @@ class ProductoListView(ListView):
         context = super().get_context_data(**kwargs)
         context["stock_bajo"] = self.request.GET.get("stock_bajo")
         return context
+    
+    def get(self, request, *args, **kwargs):
+        """Maneja la solicitud GET y muestra un mensaje si no hay productos."""
+        response = super().get(request, *args, **kwargs)
+        if not self.get_queryset().exists():
+            messages.info(request, "No hay productos disponibles.")
+        return response
     
 
 class ProductoDetailView(DetailView):
@@ -82,9 +89,9 @@ class ProductoCreateView(CreateView):
 class ProductoUpdateView(UpdateView):
     """Vista para actualizar un producto existente."""
     model = Producto
-    template_name = "producto/producto_form.html"
+    template_name = "productos/producto_form.html"
     form_class = ProductoForm
-    success_url = reverse_lazy("producto:producto_list")
+    success_url = reverse_lazy("productos:producto_list")
 
     def form_valid(self, form):
         """Sobrescribe para mostrar un mensaje de éxito."""
@@ -97,7 +104,7 @@ class ProductoDeleteView(DeleteView):
     """Vista para eliminar un producto."""
     model = Producto
     template_name = "productos/producto_confirm_delete.html"
-    success_url = reverse_lazy("producto:producto_list")
+    success_url = reverse_lazy("productos:producto_list")
 
     def delete(self, request, *args, **kwargs):
         """Sobrescribe para mostrar un mensaje de éxito después de eliminar."""
@@ -108,7 +115,7 @@ class ProductoDeleteView(DeleteView):
 class MovimientoStockCreateView(CreateView):
     """Vista para registrar un nuevo movimiento de stock."""
     model = MovimientoStock
-    template_name = "productos/movimiento_form.html"
+    template_name = "productos/producto_movimiento_form.html"
     form_class = MovimientoStockForm
 
     def get_form_kwargs(self):

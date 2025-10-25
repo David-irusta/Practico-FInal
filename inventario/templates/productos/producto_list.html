@@ -60,13 +60,17 @@
                 </td>
                 <td>
                     <div class="btn-group btn-group-sm">
+                        <a href="{% url 'productos:producto_confirm_delete' producto.pk %}" class="btn btn-danger" title ="Eliminar">
+                            <i class="fas fa-trash-alt"></i>
+
+                        </a>
                         <a href="{% url 'productos:producto_detail' producto.pk %}" class="btn btn-info" title="Ver detalle">
                             <i class="fas fa-eye"></i>
                         </a>
-                        <a href="{% url 'productos:producto_update' producto.pk %}" class="btn btn-primary" title="Editar">
+                        <a href="{% url 'productos:producto_form' producto.pk %}" class="btn btn-primary" title="Editar">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a href="{% url 'productos:movimiento_create' producto.pk %}" class="btn btn-success" title="Movimiento">
+                        <a href="{% url 'productos:producto_movimiento_form' producto.pk %}" class="btn btn-success" title="Movimiento">
                             <i class="fas fa-exchange-alt"></i>
                         </a>
                     </div>
