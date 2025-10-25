@@ -2,17 +2,21 @@
 {% load bootstrap4 %}
 {% load crispy_forms_tags %}
 
-{% block title %}Movimiento de Stock{% endblock %}
-{% block header %}Movimiento de Stock{% endblock %}
+{% block title %}Movimiento de Stock de: {{ producto.nombre }} {% endblock %}
+{% block header %}Movimiento de Stock de: {{ producto.nombre }} {% endblock %}
 
 {% block content %}
 <div class="card">
     <div class="card-body">
         <form method="post" novalidate>
             {% csrf_token %}
-            {{ form|crispy }}
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form|crispy }}
+                </div>
+            </div>
 
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <button type="submit" class="btn btn-success">
                     <i class="fas fa-save"></i> Guardar Movimiento
                 </button>
