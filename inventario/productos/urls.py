@@ -10,6 +10,6 @@ urlpatterns = [
     path('<int:pk>/editar/', views.ProductoUpdateView.as_view(), name='producto_form'),
     path('<int:pk>/eliminar/', views.ProductoDeleteView.as_view(), name='producto_confirm_delete'),
     path('<int:pk>/movimiento/', views.MovimientoStockCreateView.as_view(), name='producto_movimiento_form'),
-    path('<int:pk>/ajustar-stock/', views.AjusteStockView.as_view(), name='ajustar_stock'),
+    path('<int:pk>/ajustar-stock/', views.AjusteStockView.as_view(), name='ajuste_stock_form'),
     path('stock-bajo/', views.StockBajoListView.as_view(), name='stock_bajo_list'),
 ]
