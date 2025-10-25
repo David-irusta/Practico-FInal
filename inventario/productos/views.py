@@ -64,6 +64,11 @@ class ProductoCreateView(CreateView):
     def form_valid(self, form):
         """Sobrescribe para registrar un movimiento de stock inicial."""
         response = super().form_valid(form)
+        sku = form.cleaned_data["sku"]
+
+        if Producto.objects.filter(sku=sku).exists():
+            messages.error(self.reques, f'El sku "{sku}" ya existe. Por favor, elija otro.')
+            return self.form_invalid(form)
 
         if form.cleaned_data["stock"] > 0:
             MovimientoStock.objects.create(
